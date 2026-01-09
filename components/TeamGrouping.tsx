@@ -23,7 +23,7 @@ const TeamGrouping: React.FC<TeamGroupingProps> = ({ participants }) => {
     // Fix: Explicitly provide the Participant type to shuffleArray to ensure correct inference in TSX
     const shuffled = shuffleArray<Participant>(participants);
     const newGroups: Group[] = [];
-    
+
     let groupCount = 0;
     if (config.type === 'count') {
       groupCount = Math.min(config.value, participants.length);
@@ -69,17 +69,15 @@ const TeamGrouping: React.FC<TeamGroupingProps> = ({ participants }) => {
             <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
               <button
                 onClick={() => setConfig({ ...config, type: 'count' })}
-                className={`py-2 rounded-lg text-sm font-medium transition-all ${
-                  config.type === 'count' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'
-                }`}
+                className={`py-2 rounded-lg text-sm font-medium transition-all ${config.type === 'count' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'
+                  }`}
               >
                 固定組數
               </button>
               <button
                 onClick={() => setConfig({ ...config, type: 'size' })}
-                className={`py-2 rounded-lg text-sm font-medium transition-all ${
-                  config.type === 'size' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'
-                }`}
+                className={`py-2 rounded-lg text-sm font-medium transition-all ${config.type === 'size' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'
+                  }`}
               >
                 固定組內人數
               </button>
@@ -110,34 +108,46 @@ const TeamGrouping: React.FC<TeamGroupingProps> = ({ participants }) => {
       </div>
 
       {groups.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {groups.map((group) => (
-            <div key={group.id} className={`p-5 rounded-2xl border-2 shadow-sm transition-all hover:shadow-md ${getCardColor(group.id)}`}>
-              <div className="flex justify-between items-center mb-4">
-                <h4 className="font-bold flex items-center gap-2">
-                  <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/60 shadow-inner">
-                    {group.id}
+        <div className="space-y-4">
+          <div className="flex justify-end">
+            <button
+              onClick={handleGenerateGroups}
+              className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold px-4 py-2 hover:bg-indigo-50 rounded-lg transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3" /></svg>
+              重新分組
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {groups.map((group) => (
+              <div key={group.id} className={`p-5 rounded-2xl border-2 shadow-sm transition-all hover:shadow-md ${getCardColor(group.id)}`}>
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-bold flex items-center gap-2">
+                    <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/60 shadow-inner">
+                      {group.id}
+                    </span>
+                    Team {group.id}
+                  </h4>
+                  <span className="text-xs font-semibold px-2 py-1 bg-white/40 rounded-full">
+                    {group.members.length} 人
                   </span>
-                  Team {group.id}
-                </h4>
-                <span className="text-xs font-semibold px-2 py-1 bg-white/40 rounded-full">
-                  {group.members.length} 人
-                </span>
+                </div>
+                <ul className="space-y-2">
+                  {group.members.map((member) => (
+                    <li key={member.id} className="flex items-center gap-2 text-sm bg-white/40 px-3 py-1.5 rounded-lg">
+                      <div className="w-1.5 h-1.5 rounded-full bg-current opacity-50"></div>
+                      {member.name}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-2">
-                {group.members.map((member) => (
-                  <li key={member.id} className="flex items-center gap-2 text-sm bg-white/40 px-3 py-1.5 rounded-lg">
-                    <div className="w-1.5 h-1.5 rounded-full bg-current opacity-50"></div>
-                    {member.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-slate-400 border-2 border-dashed border-slate-200 rounded-3xl">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="mb-4 opacity-50"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M17 11h6"/><path d="M20 8v6"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="mb-4 opacity-50"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M17 11h6" /><path d="M20 8v6" /></svg>
           <p className="text-sm font-medium">配置分組參數後點擊「生成分組」</p>
         </div>
       )}
